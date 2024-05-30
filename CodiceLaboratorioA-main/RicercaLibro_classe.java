@@ -190,17 +190,6 @@ public class RicercaLibro_classe {
         return fields.toArray(new String[0]);
     }
 
-    /*
-    public static void letturaCSV(){
-        String title = fields[0];
-        String authors = fields[1];
-        String description = fields[2]; // Può essere vuoto
-        String category = fields[3]; // Può essere vuoto
-        String publisher = fields[4];
-        String price = fields[5];
-        String publishMonth = fields[6];
-        String publishYear = fields[7];
-    }*/
 
     public static void stampa(int sceltaRicerca, String title, String authors, String description, String category, String publisher, String price, String publishMonth, String publishYear){
         if (sceltaRicerca == 1) {

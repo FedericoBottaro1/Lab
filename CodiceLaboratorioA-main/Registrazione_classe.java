@@ -1,0 +1,148 @@
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Registrazione_classe {
+    
+    public static boolean lettura(String dato, int controllo){
+        String csvFile = "C://Users//utente//OneDrive//Desktop//UNI//Lab//UtentiRegistrati.csv";
+        boolean stato = false;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+            String line;
+            
+            // Salta la prima riga (intestazione)
+            br.readLine();
+            while ((line = br.readLine()) != null) {
+                String[] fields = parseLine(line);
+                if (fields.length == 8) {
+                    // Esempio di accesso ai dati
+                    String codFisc = fields[2]; 
+                    String mail = fields[3]; 
+                    String userid = fields[4];
+
+                    if(controllo == 1 && dato == codFisc){
+                        stato = true;
+                        break;
+                    }else if(controllo == 2 && dato == mail){
+                        stato = true;
+                        break;
+                    }else{
+                        stato = true;
+                        break;
+                    }
+                }
+            }
+        }catch (IOException e) {
+                e.printStackTrace();
+        }
+        return stato;
+    }
+ 
+    public static void inserimento(){
+        String csvFileName = "UtentiRegistrati.csv";
+        File csvFile = new File(csvFileName);
+
+        int controllo = 0;
+        String info = "";
+        boolean stato = false;
+
+        try {
+            if (csvFile.createNewFile()) {
+                System.out.println("File creato: " + csvFileName);
+            } else {
+                System.out.println("Il file " + csvFileName + " esiste già e verrà sovrascritto.");
+            }
+        } catch (IOException e) {
+            System.out.println("Si è verificato un errore durante la creazione del file.");
+            e.printStackTrace();
+        }
+        System.out.print("\033c");
+
+        Scanner scanner = new Scanner(System.in);
+        List<String[]> dataLines = new ArrayList<>();
+        
+        // Lettura dei dati dall'utente
+        System.out.println("Inserisci i seguenti dati personale per la registrazione.Scrivi 'fine' per concludere");
+        System.out.println("Nome: ");
+        String nomeU = scanner.nextLine(); 
+        System.out.println("Cognome: ");
+        String cognomeU = scanner.nextLine(); 
+        String codFiscU, mailU, useridU;
+
+        controllo = 1;
+        do{
+            System.out.println("Codice fiscale: ");
+            codFiscU = scanner.nextLine(); 
+            info = codFiscU;
+            stato = lettura(info, controllo);
+
+        }while(stato == true);
+        
+        controllo = 2;
+        do{
+            System.out.println("Email: ");
+            mailU=scanner.nextLine(); 
+            info = mailU;
+            stato = lettura(info, controllo);
+        }while(stato == true);
+       
+        do{
+            System.out.println("Userid: ");
+            useridU = scanner.nextLine(); 
+            info = useridU;
+            stato = lettura(info, controllo);
+        }while(stato == true);
+       
+        System.out.println("Password: ");
+        String psswU = scanner.nextLine();
+
+        try (FileWriter writer = new FileWriter(csvFileName, true)) {
+            // Scrittura dei dati nel file CSV
+            writer.append(nomeU);
+            writer.append(';');
+            writer.append(cognomeU);
+            writer.append(';');
+            writer.append(codFiscU);
+            writer.append(';');
+            writer.append(mailU);
+            writer.append(';');
+            writer.append(useridU);
+            writer.append(';');
+            writer.append(psswU);
+            writer.append('\n');
+
+            System.out.println("Dati salvati correttamente in " + csvFileName);
+
+        } catch (IOException e) {
+            System.err.println("Errore durante la scrittura nel file: " + e.getMessage());
+        }   
+        
+    }
+    
+    private static String[] parseLine(String line) {
+        boolean inQuotes = false;
+        StringBuilder sb = new StringBuilder();
+        List<String> fields = new ArrayList<>();
+
+        for (char c : line.toCharArray()) {
+            if (c == '\"') {
+                inQuotes = !inQuotes; // Toggle the inQuotes flag
+            } else if (c == ';' && !inQuotes) {
+                fields.add(sb.toString());
+                sb.setLength(0); // Clear the StringBuilder
+            } else {
+                sb.append(c);
+            }
+        }
+        fields.add(sb.toString()); // Add the last field
+
+        return fields.toArray(new String[0]);
+    }
+
+}

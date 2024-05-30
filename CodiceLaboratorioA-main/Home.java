@@ -4,8 +4,6 @@ public class Home {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int scelta = 0;
-
-        RicercaLibro_classe rc = new RicercaLibro_classe();
         
         System.out.print("\033c");
         String header = "**********************************\n"
@@ -27,13 +25,15 @@ public class Home {
             scanner.nextLine(); 
             switch (scelta) {
                 case 1:
+                    RicercaLibro_classe rc = new RicercaLibro_classe();
                     rc.menu();
                     break;
                 case 2:
                     //visualizzareValutazioni();
                     break;
                 case 3:
-                   // registrati();
+                   Registrazione_classe regc = new Registrazione_classe();
+                   regc.inserimento();
                     break;
                 case 4:
                     //eseguiLogin();

@@ -25,7 +25,7 @@ public class registrazione{
         List<String[]> dataLines = new ArrayList<>();
         
         // Lettura dei dati dall'utente
-        System.out.println("Inserisci i seguenti datipersonale per la registrazione.Scrivi 'fine' per concludere");
+        System.out.println("Inserisci i seguenti dati personale per la registrazione.Scrivi 'fine' per concludere");
 
         
         System.out.println("Nome: ");
