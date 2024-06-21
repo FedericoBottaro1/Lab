@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Registrazione_classe{
     
     public static boolean controllo_dato(String dato, int controllo){
-        String csvFile = "UtentiRegistrati.csv";
+        String csvFile = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//UtentiRegistrati.csv";
         boolean stato = false;
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
@@ -18,6 +18,8 @@ public class Registrazione_classe{
             
             // Salta la prima riga (intestazione)
             br.readLine();
+            line = br.readLine();
+            System.out.println(line);
             while ((line = br.readLine()) != null) {
                 String[] fields = parseLine(line);
                 if (fields.length == 6) {

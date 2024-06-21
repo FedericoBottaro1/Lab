@@ -31,7 +31,8 @@ public class Home {
                     rc.menu();
                     break;
                 case 2:
-                    //visualizzareValutazioni();
+                    Valutazioni_classe vc = new Valutazioni_classe();
+                    vc.visualizza();
                     break;
                 case 3:
                     Registrazione_classe regc = new Registrazione_classe();

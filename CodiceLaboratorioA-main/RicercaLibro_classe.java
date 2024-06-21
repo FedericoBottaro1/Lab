@@ -55,7 +55,7 @@ public class RicercaLibro_classe {
         sceltaRicerca = 1;
         System.out.println("Inserire il titolo del libro di cercare: ");
         String titolo=scanner.nextLine(); 
-        String csvFile = "CodiceLaboratorioA-main/DataBaseLibriVero.csv";
+        String csvFile = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//CodiceLaboratorioA-main//DataBaseLibriVero.csv";
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             String line;
             // Salta la prima riga (intestazione)
@@ -93,7 +93,7 @@ public class RicercaLibro_classe {
         sceltaRicerca=2;
         System.out.println("Inserire l'autore da cercare: ");
                 String autore=scanner.nextLine(); 
-                String csvFile1 = "CodiceLaboratorioA-main/DataBaseLibriVero.csv";
+                String csvFile1 = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//CodiceLaboratorioA-main//DataBaseLibriVero.csv";
                 try (BufferedReader br = new BufferedReader(new FileReader(csvFile1))) {
                     String line;
                     // Salta la prima riga (intestazione)
@@ -136,7 +136,7 @@ public class RicercaLibro_classe {
         String autore1=scanner.nextLine();
         System.out.println("Inserire l'anno di uscita del libro: ");
         String anno=scanner.nextLine(); 
-        String csvFile2 = "CodiceLaboratorioA-main/DataBaseLibriVero.csv";
+        String csvFile2 = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//CodiceLaboratorioA-main//DataBaseLibriVero.csv";
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile2))) {
             String line;
             // Salta la prima riga (intestazione)
@@ -171,8 +171,8 @@ public class RicercaLibro_classe {
     }
 
     public static boolean ricercaAutoTito(String titoloIns, String autoreIns){    
-        String csvFile2 = "CodiceLaboratorioA-main/DataBaseLibriVero.csv";
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile2))) {
+        String csvFile3 = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//CodiceLaboratorioA-main//DataBaseLibriVero.csv";
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile3))) {
             String line;
             // Salta la prima riga (intestazione)
             br.readLine();
@@ -208,6 +208,48 @@ public class RicercaLibro_classe {
         return false;
     }
     
+    public static boolean ricercaAutoTitoVal(String titoloIns, String autoreIns){    
+        String csvFile4 = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//ValutazioniClienti.csv";
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile4))) {
+            String line;
+            // Salta la prima riga (intestazione)
+            br.readLine();
+            while ((line = br.readLine()) != null) {
+                String[] fields = parseLine(line);
+                if (fields.length == 13) {
+                    // Esempio di accesso ai dati
+                    String title = fields[0];
+                    String authors = fields[1];
+                    String stile = fields[2]; 
+                    String noteS = fields[3]; // Può essere vuoto
+                    String contenuto = fields[4];
+                    String noteC = fields[5]; // Può essere vuoto
+                    String gradevolezza = fields[6];
+                    String noteG = fields[7]; // Può essere vuoto
+                    String originarieta = fields[8];
+                    String noteO = fields[9]; // Può essere vuoto
+                    String edizione = fields[10];
+                    String noteE = fields[11]; // Può essere vuoto
+                    String med = fields[12];
+                    
+                    // Stampa i dettagli del libro
+                    String authorsMin=authors.toLowerCase();
+                    String autoreMin=autoreIns.toLowerCase();
+                    String titleMin1=title.toLowerCase();
+                    String titoloMin1=titoloIns.toLowerCase();
+                    if(authorsMin.contains(autoreMin) && titleMin1.equals(titoloMin1)){
+                        return true;
+                    }        
+                } else {
+                    return false;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     private static String[] parseLine(String line) {
         boolean inQuotes = false;
         StringBuilder sb = new StringBuilder();

@@ -25,6 +25,7 @@ public class Login_classe extends Registrazione_classe{
                 System.out.println("\nInserisci userId: ");
                 userId = sc.nextLine();
                 controllo = controllo_dato(userId, 3);
+                System.out.println(controllo);
             }while(controllo != true);
            
             System.out.println("\nInserisci password: ");
@@ -65,6 +66,10 @@ public class Login_classe extends Registrazione_classe{
                     RicercaLibro_classe rc = new RicercaLibro_classe();
                     rc.menu();
                     break;
+                }
+                case 2:{
+                    Valutazioni_classe vc = new Valutazioni_classe();
+                    vc.visualizza();
                 }
                 case 4:{
                     Valutazioni_classe vc = new Valutazioni_classe();

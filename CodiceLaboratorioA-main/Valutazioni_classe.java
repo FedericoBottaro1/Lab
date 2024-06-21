@@ -15,8 +15,13 @@ public class Valutazioni_classe extends RicercaLibro_classe{
         return controllo;
     }
 
+    public static boolean letturaval(String titolo, String autore){
+        boolean controllo = ricercaAutoTitoVal(titolo, autore);
+        return controllo;
+    }
+
     public static void inserimento(){
-        String csvFileName = "ValutazioniClienti.csv";
+        String csvFileName = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//ValutazioniClienti.csv";
         File csvFile = new File(csvFileName);
 
         int controllo = 0;
@@ -119,18 +124,74 @@ public class Valutazioni_classe extends RicercaLibro_classe{
             }
         }while(stato != true);
     }
+
     public static void visualizza(){
         String titoloIns = "";
         String autoreIns = "";
-        boolean stato;
-        do{
-            System.out.println("Inserisci il titolo del libro");
-            titoloIns = sc.nextLine();
-            System.out.println("Inserisci l'autore del libro");
-            autoreIns = sc.nextLine();
+        String opzione="";
+        boolean stato, statoval;
+        
+        System.out.println("Inserisci il titolo del libro");
+        titoloIns = sc.nextLine();
+        System.out.println("Inserisci l'autore del libro");
+        autoreIns = sc.nextLine();
 
-            stato = lettura(titoloIns, autoreIns);
-        }while(stato != false); 
+        stato = lettura(titoloIns, autoreIns);
+        statoval = letturaval(titoloIns, autoreIns);
+        
+        if(stato==true && statoval == false){
+            System.out.println("Il libro di cui vuoi visualizzare la valutazione non è ancora stato valutato, vuoi essere il primo a valutarlo?");
+            opzione = sc.nextLine();
+
+            if(opzione.equals("y")){
+                inserimento();
+            }
+        }
+        else if(stato==true && statoval==true){
+            String csvFile = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//ValutazioniClienti.csv";
+            try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+                    String line;
+                    // Salta la prima riga (intestazione)
+                    br.readLine();
+                    
+                    while ((line = br.readLine()) != null) {
+                        String[] fields = parseLine(line);
+                        if (fields.length == 13) {
+                            // Esempio di accesso ai dati
+                            String title = fields[0];
+                            String authors = fields[1];
+                            String stile = fields[2]; 
+                            String noteS = fields[3]; // Può essere vuoto
+                            String contenuto = fields[4];
+                            String noteC = fields[5]; // Può essere vuoto
+                            String gradevolezza = fields[6];
+                            String noteG = fields[7]; // Può essere vuoto
+                            String originarieta = fields[8];
+                            String noteO = fields[9]; // Può essere vuoto
+                            String edizione = fields[10];
+                            String noteE = fields[11]; // Può essere vuoto
+                            String med = fields[12];
+                            
+                            stampa(title, authors, stile, noteS, contenuto, noteC, gradevolezza, noteG, originarieta, noteO, edizione, noteE, med);
+                        }
+                    }
+            } catch (IOException e) {
+                    e.printStackTrace();
+            }
+        }
+    }
+
+    
+
+    public static void stampa(String title, String authors, String stile, String noteS, String contenuto, String noteC, String gradevolezza, String noteG, String originarieta, String noteO, String edizione, String noteE, String med){
+        System.out.println("Titolo: " + title);
+        System.out.println("Autore: " + authors);
+        System.out.println("Stile: " + stile + " " + noteS);
+        System.out.println("Contenuto: " + contenuto + " " + noteC);
+        System.out.println("Gradevolezza: " + gradevolezza + " " + noteG);
+        System.out.println("Originarietà: " + originarieta + " " + noteO);
+        System.out.println("Edizione: " + edizione + " " + noteE);
+        System.out.println("---------------------------");
     }
 
     private static String[] parseLine(String line) {
