@@ -15,11 +15,6 @@ public class Valutazioni_classe extends RicercaLibro_classe{
         return controllo;
     }
 
-    public static boolean letturaval(String titolo, String autore){
-        boolean controllo = ricercaAutoTitoVal(titolo, autore);
-        return controllo;
-    }
-
     public static void inserimento(){
         String csvFileName = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//ValutazioniClienti.csv";
         File csvFile = new File(csvFileName);
@@ -126,59 +121,93 @@ public class Valutazioni_classe extends RicercaLibro_classe{
     }
 
     public static void visualizza(){
+        String csvFile = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//ValutazioniClienti.csv";
+        
         String titoloIns = "";
         String autoreIns = "";
         String opzione="";
-        boolean stato, statoval;
+        boolean stato1, statoval;
         
         System.out.println("Inserisci il titolo del libro");
         titoloIns = sc.nextLine();
         System.out.println("Inserisci l'autore del libro");
         autoreIns = sc.nextLine();
 
-        stato = lettura(titoloIns, autoreIns);
-        statoval = letturaval(titoloIns, autoreIns);
+        stato1 = ricercaAutoTitoVal(titoloIns, autoreIns);
         
-        if(stato==true && statoval == false){
-            System.out.println("Il libro di cui vuoi visualizzare la valutazione non è ancora stato valutato, vuoi essere il primo a valutarlo?");
-            opzione = sc.nextLine();
-
-            if(opzione.equals("y")){
-                inserimento();
-            }
-        }
-        else if(stato==true && statoval==true){
-            String csvFile = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//ValutazioniClienti.csv";
+        if(stato1==false){
+            System.out.println("Il libro di cui vuoi visualizzare la valutazione non è ancora stato valutato");
+        }else{
             try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-                    String line;
-                    // Salta la prima riga (intestazione)
-                    br.readLine();
-                    
-                    while ((line = br.readLine()) != null) {
-                        String[] fields = parseLine(line);
-                        if (fields.length == 13) {
-                            // Esempio di accesso ai dati
-                            String title = fields[0];
-                            String authors = fields[1];
-                            String stile = fields[2]; 
-                            String noteS = fields[3]; // Può essere vuoto
-                            String contenuto = fields[4];
-                            String noteC = fields[5]; // Può essere vuoto
-                            String gradevolezza = fields[6];
-                            String noteG = fields[7]; // Può essere vuoto
-                            String originarieta = fields[8];
-                            String noteO = fields[9]; // Può essere vuoto
-                            String edizione = fields[10];
-                            String noteE = fields[11]; // Può essere vuoto
-                            String med = fields[12];
-                            
-                            stampa(title, authors, stile, noteS, contenuto, noteC, gradevolezza, noteG, originarieta, noteO, edizione, noteE, med);
-                        }
+                String line;
+                        
+                while ((line = br.readLine()) != null) {
+                    String[] fields = parseLine(line);
+                    if (fields.length == 13) {
+                        // Esempio di accesso ai dati
+                        String title = fields[0];
+                        String authors = fields[1];
+                        String stile = fields[2]; 
+                        String noteS = fields[3]; // Può essere vuoto
+                        String contenuto = fields[4];
+                        String noteC = fields[5]; // Può essere vuoto
+                        String gradevolezza = fields[6];
+                        String noteG = fields[7]; // Può essere vuoto
+                        String originarieta = fields[8];
+                        String noteO = fields[9]; // Può essere vuoto
+                        String edizione = fields[10];
+                        String noteE = fields[11]; // Può essere vuoto
+                        String med = fields[12];          
                     }
+                }
             } catch (IOException e) {
-                    e.printStackTrace();
+                e.printStackTrace();
             }
         }
+        System.out.println("Premi invio per tornare al menu principale...");
+        sc.nextLine();
+    }
+    
+    public static boolean ricercaAutoTitoVal(String titoloIns, String autoreIns){    
+        String csvFile = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//ValutazioniClienti.csv";
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+            String line;
+            // Salta la prima riga (intestazione)
+            //br.readLine();
+            while ((line = br.readLine()) != null) {
+                String[] fields = parseLine(line);
+                if (fields.length == 13) {
+                    // Esempio di accesso ai dati
+                    String title = fields[0];
+                    String authors = fields[1];
+                    String stile = fields[2]; 
+                    String noteS = fields[3]; // Può essere vuoto
+                    String contenuto = fields[4];
+                    String noteC = fields[5]; // Può essere vuoto
+                    String gradevolezza = fields[6];
+                    String noteG = fields[7]; // Può essere vuoto
+                    String originarieta = fields[8];
+                    String noteO = fields[9]; // Può essere vuoto
+                    String edizione = fields[10];
+                    String noteE = fields[11]; // Può essere vuoto
+                    String med = fields[12];
+                    
+                    // Stampa i dettagli del libro
+                    String authorsMin=authors.toLowerCase();
+                    String autoreMin=autoreIns.toLowerCase();
+                    String titleMin1=title.toLowerCase();
+                    String titoloMin1=titoloIns.toLowerCase();
+                    if(authorsMin.contains(autoreMin) && titleMin1.equals(titoloMin1)){
+                        System.out.print("\033c");
+                        stampa(title, authors, stile, noteS, contenuto, noteC, gradevolezza, noteG, originarieta, noteO, edizione, noteE, med);
+                        return true;
+                    }        
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     

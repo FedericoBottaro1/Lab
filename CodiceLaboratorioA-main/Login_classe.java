@@ -25,7 +25,6 @@ public class Login_classe extends Registrazione_classe{
                 System.out.println("\nInserisci userId: ");
                 userId = sc.nextLine();
                 controllo = controllo_dato(userId, 3);
-                System.out.println(controllo);
             }while(controllo != true);
            
             System.out.println("\nInserisci password: ");
@@ -43,6 +42,7 @@ public class Login_classe extends Registrazione_classe{
 
     public static void menuLog(){
         int scelta = 0;
+        boolean loggedIn=true;
 
         do {
             System.out.print("\033c");
@@ -68,15 +68,29 @@ public class Login_classe extends Registrazione_classe{
                     break;
                 }
                 case 2:{
-                    Valutazioni_classe vc = new Valutazioni_classe();
-                    vc.visualizza();
+                    Valutazioni_classe vc1 = new Valutazioni_classe();
+                    vc1.visualizza();
+                    break;
+                }
+                case 3:{
+                    Libreria_classe lc = new Libreria_classe();
+                    lc.registraLibreria();
+                    break;
                 }
                 case 4:{
                     Valutazioni_classe vc = new Valutazioni_classe();
                     vc.inserimento();
+                    break;
+                }
+                case 5:{
+                    Suggerimenti_classe sc = new Suggerimenti_classe();
+                    sc.inserisciSuggerimentoLibro();
+                    break;
                 }
                 //?
                 case 7:{
+                    loggedIn= false;
+                    System.out.println("Log-out effettuato con successo.");
                     break;
                 }
                 default:{

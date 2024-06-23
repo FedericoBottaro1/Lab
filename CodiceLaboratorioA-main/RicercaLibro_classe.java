@@ -30,7 +30,7 @@ public class RicercaLibro_classe {
             
             scelta(scelta);
 
-        } while (scelta != 1 && scelta != 2 && scelta != 3);
+        } while (scelta != 1 && scelta != 2 && scelta != 3 && scelta != 4);
     }
 
     public static void scelta(int scelta){
@@ -189,48 +189,6 @@ public class RicercaLibro_classe {
                     String price = fields[5];
                     String publishMonth = fields[6];
                     String publishYear = fields[7];
-                    
-                    // Stampa i dettagli del libro
-                    String authorsMin=authors.toLowerCase();
-                    String autoreMin=autoreIns.toLowerCase();
-                    String titleMin1=title.toLowerCase();
-                    String titoloMin1=titoloIns.toLowerCase();
-                    if(authorsMin.contains(autoreMin) && titleMin1.equals(titoloMin1)){
-                        return true;
-                    }        
-                } else {
-                    return false;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-    public static boolean ricercaAutoTitoVal(String titoloIns, String autoreIns){    
-        String csvFile4 = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//ValutazioniClienti.csv";
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile4))) {
-            String line;
-            // Salta la prima riga (intestazione)
-            br.readLine();
-            while ((line = br.readLine()) != null) {
-                String[] fields = parseLine(line);
-                if (fields.length == 13) {
-                    // Esempio di accesso ai dati
-                    String title = fields[0];
-                    String authors = fields[1];
-                    String stile = fields[2]; 
-                    String noteS = fields[3]; // Può essere vuoto
-                    String contenuto = fields[4];
-                    String noteC = fields[5]; // Può essere vuoto
-                    String gradevolezza = fields[6];
-                    String noteG = fields[7]; // Può essere vuoto
-                    String originarieta = fields[8];
-                    String noteO = fields[9]; // Può essere vuoto
-                    String edizione = fields[10];
-                    String noteE = fields[11]; // Può essere vuoto
-                    String med = fields[12];
                     
                     // Stampa i dettagli del libro
                     String authorsMin=authors.toLowerCase();

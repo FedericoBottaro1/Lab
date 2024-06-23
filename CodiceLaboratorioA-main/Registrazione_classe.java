@@ -18,8 +18,6 @@ public class Registrazione_classe{
             
             // Salta la prima riga (intestazione)
             br.readLine();
-            line = br.readLine();
-            System.out.println(line);
             while ((line = br.readLine()) != null) {
                 String[] fields = parseLine(line);
                 if (fields.length == 6) {

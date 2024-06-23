@@ -7,7 +7,7 @@ public class Home {
             
         do {
             scelta=0;
-            //System.out.print("\033c");
+            System.out.print("\033c");
             String header = "**********************************\n"
                         + "*            BENVENUTO           *\n"
                         + "**********************************";
