@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class Libreria_classe extends Login_classe{
     private static RicercaLibro_classe rc = new RicercaLibro_classe();
-
+    
     static Scanner sc = new Scanner(System.in);
 
     public static void registraLibreria(){
@@ -71,6 +71,14 @@ public class Libreria_classe extends Login_classe{
                     writer.append(';');
                 }else{ 
                     writer.append('\n');
+                   /* System.out.println("Vuoi inserire dei suggerimenti per questo libro? (max 3) (y / n) ");
+                    scelta = sc.nextLine();
+
+                    if(scelta.equals("y")){
+                        Suggerimenti_classe.inserisciSuggerimentoLibro();
+                    }else{
+                        writer.append('\n');
+                    } */
                     System.out.println("Dati salvati correttamente in " + csvFileName);
                     sc.nextLine();
                 }
