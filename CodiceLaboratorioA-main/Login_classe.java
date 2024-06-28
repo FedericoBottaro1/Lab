@@ -3,7 +3,15 @@ import java.util.Scanner;
 public class Login_classe extends Registrazione_classe{
     static Scanner sc = new Scanner(System.in);
 
-    private static String userId;
+    protected static String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public static void setUserId(String userId) {
+        Login_classe.userId = userId;
+    }
 
     public static void inserimento(){
         String pass;
@@ -56,8 +64,9 @@ public class Login_classe extends Registrazione_classe{
             System.out.println("1) Eseguire una ricerca di un libro specifico");
             System.out.println("2) Visualizzare la valutazioni fornite dagli altri utenti registrati");
             System.out.println("3) Crea una libreria personale");
-            System.out.println("4) Inserisci valutazione libro");
-            System.out.println("5) Inserisci un suggerimento");
+            System.out.println("4) Visualizza librerie personali");
+            System.out.println("5) Inserisci valutazione libro");
+            System.out.println("6) Inserisci un suggerimento");
             System.out.println("7) log-out");
             scelta = sc.nextInt();
 
@@ -78,11 +87,16 @@ public class Login_classe extends Registrazione_classe{
                     break;
                 }
                 case 4:{
+                    Libreria_classe lc = new Libreria_classe();
+                    lc.leggiLibreria();
+                    break;
+                }
+                case 5:{
                     Valutazioni_classe vc = new Valutazioni_classe();
                     vc.inserimento();
                     break;
                 }
-                case 5:{
+                case 6:{
                     Suggerimenti_classe sc = new Suggerimenti_classe();
                     sc.inserisciSuggerimentoLibro();
                     break;
