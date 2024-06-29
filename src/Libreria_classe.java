@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+// metodo per aggiungere libro a libreria già esistente
+
 public class Libreria_classe extends Login_classe{
     private static File file = new File("Resources/Librerie.csv");
     private static String absol = file.getAbsolutePath();  

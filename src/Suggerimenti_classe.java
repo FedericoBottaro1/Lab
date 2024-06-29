@@ -12,23 +12,25 @@ public class Suggerimenti_classe extends Libreria_classe{
     private static String absol = file.getAbsolutePath();  
     
     private static File file1 = new File("Resources/Librerie.csv");
-    private static String absol1 = file.getAbsolutePath();
+    private static String absol1 = file1.getAbsolutePath();
 
     static Scanner sc = new Scanner(System.in);
     
     public static void inserisciSuggerimentoLibro(){
        File csvFile = new File(absol);
 
-        String scelta ="";
+        String scelta = "";
+        String titoloSugg, autoreSugg;
+        boolean stato1 = false;
 
         try {
             if (csvFile.createNewFile()) {
                 System.out.println("File creato: " + absol);
             } else {
-                System.out.println("Il file " + absol + " esiste già e verrà sovrascritto.");
+                System.out.println("Il file " + absol + " esiste gia' e verra' sovrascritto.");
             }
         } catch (IOException e) {
-            System.out.println("Si è verificato un errore durante la creazione del file.");
+            System.out.println("Si e' verificato un errore durante la creazione del file.");
             e.printStackTrace();
         }
         System.out.print("\033c");
@@ -39,37 +41,43 @@ public class Suggerimenti_classe extends Libreria_classe{
         System.out.println("Inserire i dati del libro a cui si vogliono inserire i suggerminti: ");
         System.out.println("Titolo: ");
         String titolo = sc.nextLine();
+        
         System.out.println("Autore: ");
         String autore = sc.nextLine();
         //dopo che vengono inseriti i dati il programma si chiude e torna al login home
-        boolean stato=ricercaLib(titolo, autore);
-
-        System.out.println(stato);
+        
+        boolean stato = ricercaLib(titolo, autore);
+        
 
         if(stato == true){
-            System.out.println("Inserire il suggerimento: ");
-            System.out.println("Titolo: ");
-            String titoloSugg = sc.nextLine();
-            System.out.println("Autore: ");
-            String autoreSugg = sc.nextLine();
-
             try (FileWriter writer = new FileWriter(absol, true)) {
-                writer.append(titolo); 
-                writer.append(';');
-                writer.append(titoloSugg); 
-                writer.append(';');
-                writer.append(autoreSugg);
-                writer.append(';');
-                writer.append('\n');
-                System.out.println("Vuoi inserire un altro libro? (y / n) ");
-                scelta = sc.nextLine();
+                do{
+                    do{  
+                        System.out.print("\033c");
+                        
+                        System.out.println("Inserire il suggerimento: ");
+                        System.out.println("Titolo: ");
+                        titoloSugg = sc.nextLine();
+                        
+                        System.out.println("Autore: ");
+                        autoreSugg = sc.nextLine();
+    
+                        stato = RicercaLibro_classe.ricercaAutoTito(titolo, autore);
+                    }while(stato != true);
 
-                while(scelta.equals("y")){
-                    System.out.println("Inserire il titolo del nuovo suggerimento; ");
-                    titoloSugg = sc.nextLine();
-                    System.out.println("Inserire l'autore del libro: "+ titoloSugg);
-                    autoreSugg = sc.nextLine();
+                    //System.out.println("-----" +limiteConsigli(titolo, autore));
+                    if(limiteConsigli(titolo, autore) >= 3){
+                        System.out.println("Hai raggiunto il massimo di consigli");
+                        break;
+                   }
+                   //se metto 4 di fila gli scrive tutti
+                    
+                    // Scrittura dei dati nel file CSV
+                    writer.append(Login_classe.userId); //nome user
+                    writer.append(';');
                     writer.append(titolo); 
+                    writer.append(';');
+                    writer.append(autore); 
                     writer.append(';');
                     writer.append(titoloSugg); 
                     writer.append(';');
@@ -78,14 +86,14 @@ public class Suggerimenti_classe extends Libreria_classe{
                     writer.append('\n');
                     System.out.println("Vuoi inserire un altro libro? (y / n) ");
                     scelta = sc.nextLine();
-                }
-                System.out.println("Dati salvati correttamente in " + absol);
+                    
+                }while(!scelta.equals("n"));
+
             }catch (IOException e) {
                 System.err.println("Errore durante la scrittura nel file: " + e.getMessage());
             }
-            sc.nextLine();
         }else{
-            System.out.println("Il libro non è presente in nessuna libreria.");
+            System.out.println("Il libro non e' presente in nessuna libreria.");
         }
         sc.nextLine();
     }
@@ -93,19 +101,16 @@ public class Suggerimenti_classe extends Libreria_classe{
     public static boolean ricercaLib(String titolo, String autore){
         String line;
         boolean stato = false;
-
+    
         try (BufferedReader br = new BufferedReader(new FileReader(absol1))) {
-            
-
             while ((line = br.readLine()) != null) {
                 String[] fields = parseLine(line);
                 if (fields.length == 5) {
                     String user = fields[0];
-                    String nome = fields[1];
                     String title = fields[2]; 
                     String authors = fields[3];
-
-                    if(user.equals(Libreria_classe.userId) && titolo.equals(title)) {
+                    
+                    if(user.equals(Libreria_classe.userId) && titolo.equals(title) && autore.contains(authors)) {
                         stato = true;
                     }
                 }
@@ -116,6 +121,34 @@ public class Suggerimenti_classe extends Libreria_classe{
         
         return stato;
     }
+
+    public static int limiteConsigli(String titolo, String autore){
+        int count = 0;
+        String line;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(absol))) {
+            while ((line = br.readLine()) != null) {
+                String[] fields = parseLine(line);
+                if (fields.length == 6) {
+                    
+                    String user = fields[0];
+                    String title = fields[1];
+                    String authors = fields[2]; 
+                    String titleSugg = fields[3]; 
+                    String authorsSugg = fields[4];
+
+                    if(user.equals(Libreria_classe.userId) && titolo.equals(title)) {
+                        count++;
+                    }
+                }
+            }
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return count;
+    }
+
 
     private static String[] parseLine(String line) {
         boolean inQuotes = false;
