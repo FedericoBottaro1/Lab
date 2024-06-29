@@ -8,21 +8,23 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Libreria_classe extends Login_classe{
+    private static File file = new File("Resources/Librerie.csv");
+    private static String absol = file.getAbsolutePath();  
+    
     private static RicercaLibro_classe rc = new RicercaLibro_classe();
     
     static Scanner sc = new Scanner(System.in);
 
     public static void registraLibreria(){
-        String csvFileName = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//Librerie.csv";
-        File csvFile = new File(csvFileName);
+        File csvFile = new File(absol);
 
         String scelta ="";
 
         try {
             if (csvFile.createNewFile()) {
-                System.out.println("File creato: " + csvFileName);
+                System.out.println("File creato: " + absol);
             } else {
-                System.out.println("Il file " + csvFileName + " esiste già e verrà sovrascritto.");
+                System.out.println("Il file " + absol + " esiste già e verrà sovrascritto.");
             }
         } catch (IOException e) {
             System.out.println("Si è verificato un errore durante la creazione del file.");
@@ -41,7 +43,7 @@ public class Libreria_classe extends Login_classe{
         String autore = sc.nextLine();
 
         if(rc.ricercaAutoTito(titolo, autore) == true){
-            try (FileWriter writer = new FileWriter(csvFileName, true)) {
+            try (FileWriter writer = new FileWriter(absol, true)) {
                 // Scrittura dei dati nel file CSV
                 writer.append(Login_classe.userId); //nome user
                 writer.append(';');
@@ -79,7 +81,7 @@ public class Libreria_classe extends Login_classe{
                     }else{
                         writer.append('\n');
                     } */
-                    System.out.println("Dati salvati correttamente in " + csvFileName);
+                    System.out.println("Dati salvati correttamente in " + absol);
                     sc.nextLine();
                 }
                 // il file non viene creato, capire il perchè...
@@ -92,7 +94,7 @@ public class Libreria_classe extends Login_classe{
         }
     }
 
-    public static void leggiLibreria(){
+   /* public static void leggiLibreria(){
         //deve leggere e stampare solamente i libri presenti nella libreira (titolo autore)
         String csvFile = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//Librerie.csv";
 
@@ -120,7 +122,7 @@ public class Libreria_classe extends Login_classe{
             e.printStackTrace();
         }
         sc.nextLine();
-    }
+    }*/
 
     private static String[] parseLine(String line) {
         boolean inQuotes = false;
