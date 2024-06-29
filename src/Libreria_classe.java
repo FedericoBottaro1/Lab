@@ -19,6 +19,8 @@ public class Libreria_classe extends Login_classe{
         File csvFile = new File(absol);
 
         String scelta ="";
+        String nome, titolo, autore;
+        boolean stato = false;
 
         try {
             if (csvFile.createNewFile()) {
@@ -32,18 +34,21 @@ public class Libreria_classe extends Login_classe{
         }
         System.out.print("\033c");
 
-        Scanner scanner = new Scanner(System.in);
-        List<String[]> dataLines = new ArrayList<>();
 
-        System.out.println("Inserire il nome della nuova libreria: ");
-        String nome = sc.nextLine();
-        System.out.println("Inserire il titolo da inserire nella libreria: " + nome);
-        String titolo = sc.nextLine();
-        System.out.println("Inserire l'autore del libro: " + titolo);
-        String autore = sc.nextLine();
+        try (FileWriter writer = new FileWriter(absol, true)) {
+            System.out.println("Inserire il nome della nuova libreria: ");
+            nome = sc.nextLine();
+            do{
+                do{  
+                    System.out.print("\033c");
+                    System.out.println("Inserire il titolo da inserire nella libreria: " + nome);
+                    titolo = sc.nextLine();
+                    System.out.println("Inserire l'autore del libro: " + titolo);
+                    autore = sc.nextLine();
 
-        if(rc.ricercaAutoTito(titolo, autore) == true){
-            try (FileWriter writer = new FileWriter(absol, true)) {
+                    stato = rc.ricercaAutoTito(titolo, autore);
+                }while(stato != true);
+                    
                 // Scrittura dei dati nel file CSV
                 writer.append(Login_classe.userId); //nome user
                 writer.append(';');
@@ -56,73 +61,46 @@ public class Libreria_classe extends Login_classe{
                 writer.append('\n');
                 System.out.println("Vuoi inserire un altro libro? (y / n) ");
                 scelta = sc.nextLine();
-    
-                //mettere a posto perchè se si preme 'n' torna al menu
-                if(scelta.equals("y")){
-                    System.out.println("Inserire il titolo da inserire nella libreria " + nome);
-                    titolo = sc.nextLine();
-                    System.out.println("Inserire l'autore del libro: " + titolo);
-                    autore = sc.nextLine();
-                    writer.append(Login_classe.userId); //nome user
-                    writer.append(';');
-                    writer.append(nome); //nome libreria
-                    writer.append(';');
-                    writer.append(titolo);
-                    writer.append(';');
-                    writer.append(autore); //autore
-                    writer.append(';');
-                }else{ 
-                    writer.append('\n');
-                   /* System.out.println("Vuoi inserire dei suggerimenti per questo libro? (max 3) (y / n) ");
-                    scelta = sc.nextLine();
-
-                    if(scelta.equals("y")){
-                        Suggerimenti_classe.inserisciSuggerimentoLibro();
-                    }else{
-                        writer.append('\n');
-                    } */
-                    System.out.println("Dati salvati correttamente in " + absol);
-                    sc.nextLine();
-                }
-                // il file non viene creato, capire il perchè...
-            } catch (IOException e) {
-                System.err.println("Errore durante la scrittura nel file: " + e.getMessage());
-            }
-        }else{
-            System.out.println("Il libro non è presente nel database.");
-            sc.nextLine();
+            }while(!scelta.equals("n"));
+            
+            
+        } catch (IOException e) {
+            System.err.println("Errore durante la scrittura nel file: " + e.getMessage());
         }
     }
 
-   /* public static void leggiLibreria(){
-        //deve leggere e stampare solamente i libri presenti nella libreira (titolo autore)
-        String csvFile = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//Librerie.csv";
-
-        System.out.println("oaic");
-
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+    public static void leggiLibreria(){
+        //deve leggere e stampare solamente i libri presenti nella libreria (titolo autore)
+        String nomeLib = "";
+        System.out.println("Inserisci il nome della libreria che vuoi visualizzare: ");
+        nomeLib = sc.nextLine();
+        
+        System.out.print("\033c");
+        try (BufferedReader br = new BufferedReader(new FileReader(absol))) {
             String line;
-                    
+            
             while ((line = br.readLine()) != null) {
                 String[] fields = parseLine(line);
-                if (fields.length == 4) {
+                
+                if(fields.length == 5) {
                     // Esempio di accesso ai dati
-                    String nome = fields[0];
-                    String user = fields[1];
+                    String user = fields[0];
+                    String nome = fields[1];
                     String title = fields[2];
                     String authors = fields[3]; 
-                    
-                    while(user.equals(Login_classe.userId)){
+
+                    if(user.equals(Libreria_classe.userId) && nome.equals(nomeLib)){
                         stampa(nome, user, title, authors);
-                        sc.nextLine();
+                        //sc.nextLine();
                     }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    
         sc.nextLine();
-    }*/
+    }
 
     private static String[] parseLine(String line) {
         boolean inQuotes = false;

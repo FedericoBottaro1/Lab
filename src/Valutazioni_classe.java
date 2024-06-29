@@ -132,47 +132,30 @@ public class Valutazioni_classe extends RicercaLibro_classe{
         titoloIns = sc.nextLine();
         System.out.println("Inserisci l'autore del libro");
         autoreIns = sc.nextLine();
-
-        stato1 = ricercaAutoTitoVal(titoloIns, autoreIns);
+        
+        System.out.print("\033c");
+        
+        stato1 = ricercaValAutoTito(titoloIns, autoreIns);
         
         if(stato1==false){
             System.out.println("Il libro di cui vuoi visualizzare la valutazione non è ancora stato valutato");
-        }else{
-            try (BufferedReader br = new BufferedReader(new FileReader(absol))) {
-                String line;
-                        
-                while ((line = br.readLine()) != null) {
-                    String[] fields = parseLine(line);
-                    if (fields.length == 13) {
-                        // Esempio di accesso ai dati
-                        String title = fields[0];
-                        String authors = fields[1];
-                        String stile = fields[2]; 
-                        String noteS = fields[3]; // Può essere vuoto
-                        String contenuto = fields[4];
-                        String noteC = fields[5]; // Può essere vuoto
-                        String gradevolezza = fields[6];
-                        String noteG = fields[7]; // Può essere vuoto
-                        String originarieta = fields[8];
-                        String noteO = fields[9]; // Può essere vuoto
-                        String edizione = fields[10];
-                        String noteE = fields[11]; // Può essere vuoto
-                        String med = fields[12];          
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
+
         System.out.println("Premi invio per tornare al menu principale...");
         sc.nextLine();
     }
     
-    public static boolean ricercaAutoTitoVal(String titoloIns, String autoreIns){    
+    public static boolean ricercaValAutoTito(String titoloIns, String autoreIns){    
+        boolean stato = false;
+        int count = 0;
+        int stileMedia = 0;
+        int contMedia = 0;
+        int gradMedia = 0;
+        int origMedia = 0;
+        int ediMedia = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(absol))) {
             String line;
-            // Salta la prima riga (intestazione)
-            //br.readLine();
+            
             while ((line = br.readLine()) != null) {
                 String[] fields = parseLine(line);
                 if (fields.length == 13) {
@@ -190,36 +173,51 @@ public class Valutazioni_classe extends RicercaLibro_classe{
                     String edizione = fields[10];
                     String noteE = fields[11]; // Può essere vuoto
                     String med = fields[12];
-                    
+                            
                     // Stampa i dettagli del libro
                     String authorsMin=authors.toLowerCase();
                     String autoreMin=autoreIns.toLowerCase();
                     String titleMin1=title.toLowerCase();
                     String titoloMin1=titoloIns.toLowerCase();
+                    
                     if(authorsMin.contains(autoreMin) && titleMin1.equals(titoloMin1)){
-                        System.out.print("\033c");
+                        stileMedia += Integer.parseInt(stile);
+                        contMedia += Integer.parseInt(contenuto);
+                        gradMedia += Integer.parseInt(gradevolezza);
+                        origMedia += Integer.parseInt(originarieta);
+                        ediMedia += Integer.parseInt(edizione);
+                        count++;
+
                         stampa(title, authors, stile, noteS, contenuto, noteC, gradevolezza, noteG, originarieta, noteO, edizione, noteE, med);
-                        return true;
-                    }        
+                        stato = true;
+                    }    
                 }
             }
+            stampaMedie(stileMedia, contMedia, gradMedia, origMedia, ediMedia, count);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+        return stato;
     }
-
-    
 
     public static void stampa(String title, String authors, String stile, String noteS, String contenuto, String noteC, String gradevolezza, String noteG, String originarieta, String noteO, String edizione, String noteE, String med){
         System.out.println("Titolo: " + title);
         System.out.println("Autore: " + authors);
-        System.out.println("Stile: " + stile + " " + noteS);
-        System.out.println("Contenuto: " + contenuto + " " + noteC);
-        System.out.println("Gradevolezza: " + gradevolezza + " " + noteG);
-        System.out.println("Originarietà: " + originarieta + " " + noteO);
-        System.out.println("Edizione: " + edizione + " " + noteE);
+        System.out.println("Stile: " + stile + " \n" + noteS);
+        System.out.println("Contenuto: " + contenuto + " \n" + noteC);
+        System.out.println("Gradevolezza: " + gradevolezza + " \n" + noteG);
+        System.out.println("Originarietà: " + originarieta + " \n" + noteO);
+        System.out.println("Edizione: " + edizione + " \n" + noteE);
         System.out.println("---------------------------");
+    }
+
+    public static void stampaMedie(int stile, int contenuto, int gradevolezza, int originarieta, int edizione, int contatore){
+        System.out.println("Le medie delle recensioni del seguente libro sono:");
+        System.out.println("Stile: " + stile/contatore);
+        System.out.println("Contenuto: " + contenuto/contatore);
+        System.out.println("Gradevolezza: " + gradevolezza/contatore);
+        System.out.println("Originarietà: " + originarieta/contatore);
+        System.out.println("Edizione: " + edizione/contatore);
     }
 
     private static String[] parseLine(String line) {

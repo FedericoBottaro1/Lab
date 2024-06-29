@@ -88,7 +88,7 @@ public class Login_classe extends Registrazione_classe{
                 }
                 case 4:{
                     Libreria_classe lc = new Libreria_classe();
-                    //lc.leggiLibreria();
+                    lc.leggiLibreria();
                     break;
                 }
                 case 5:{

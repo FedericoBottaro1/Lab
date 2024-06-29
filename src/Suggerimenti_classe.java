@@ -8,20 +8,24 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Suggerimenti_classe extends Libreria_classe{
+    private static File file = new File("Resources/ConsigliLibri.csv");
+    private static String absol = file.getAbsolutePath();  
+    
+    private static File file1 = new File("Resources/Librerie.csv");
+    private static String absol1 = file.getAbsolutePath();
+
     static Scanner sc = new Scanner(System.in);
     
-    public static void inserisciSuggerimentoLibro()
-    {
-        String csvFileName1 = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//ConsigliLibri.csv";
-        File csvFile = new File(csvFileName1);
+    public static void inserisciSuggerimentoLibro(){
+       File csvFile = new File(absol);
 
         String scelta ="";
 
         try {
             if (csvFile.createNewFile()) {
-                System.out.println("File creato: " + csvFileName1);
+                System.out.println("File creato: " + absol);
             } else {
-                System.out.println("Il file " + csvFileName1 + " esiste già e verrà sovrascritto.");
+                System.out.println("Il file " + absol + " esiste già e verrà sovrascritto.");
             }
         } catch (IOException e) {
             System.out.println("Si è verificato un errore durante la creazione del file.");
@@ -37,7 +41,7 @@ public class Suggerimenti_classe extends Libreria_classe{
         String titolo = sc.nextLine();
         System.out.println("Autore: ");
         String autore = sc.nextLine();
-//dopo che vengono inseriti i dati il programma si chiude e torna al login home
+        //dopo che vengono inseriti i dati il programma si chiude e torna al login home
         boolean stato=ricercaLib(titolo, autore);
 
         System.out.println(stato);
@@ -49,7 +53,7 @@ public class Suggerimenti_classe extends Libreria_classe{
             System.out.println("Autore: ");
             String autoreSugg = sc.nextLine();
 
-            try (FileWriter writer = new FileWriter(csvFileName1, true)) {
+            try (FileWriter writer = new FileWriter(absol, true)) {
                 writer.append(titolo); 
                 writer.append(';');
                 writer.append(titoloSugg); 
@@ -75,7 +79,7 @@ public class Suggerimenti_classe extends Libreria_classe{
                     System.out.println("Vuoi inserire un altro libro? (y / n) ");
                     scelta = sc.nextLine();
                 }
-                System.out.println("Dati salvati correttamente in " + csvFileName1);
+                System.out.println("Dati salvati correttamente in " + absol);
             }catch (IOException e) {
                 System.err.println("Errore durante la scrittura nel file: " + e.getMessage());
             }
@@ -83,31 +87,34 @@ public class Suggerimenti_classe extends Libreria_classe{
         }else{
             System.out.println("Il libro non è presente in nessuna libreria.");
         }
+        sc.nextLine();
     }
 
     public static boolean ricercaLib(String titolo, String autore){
-        String csvFile = "C://Users//utente//OneDrive//Desktop//UNI//Lab//Lab//Librerie.csv";
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            String line;
+        String line;
+        boolean stato = false;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(absol1))) {
+            
 
             while ((line = br.readLine()) != null) {
                 String[] fields = parseLine(line);
-                if (fields.length == 4) {
+                if (fields.length == 5) {
                     String user = fields[0];
                     String nome = fields[1];
                     String title = fields[2]; 
                     String authors = fields[3];
 
-                    if(autore.equals(authors) && titolo.equals(title))
-                    {
-                        return true;
+                    if(user.equals(Libreria_classe.userId) && titolo.equals(title)) {
+                        stato = true;
                     }
                 }
             }
         }catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+        
+        return stato;
     }
 
     private static String[] parseLine(String line) {
