@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-// metodo per aggiungere libro a libreria già esistente
-
 public class Libreria_classe extends Login_classe{
     private static File file = new File("Resources/Librerie.csv");
     private static String absol = file.getAbsolutePath();  
@@ -18,7 +16,7 @@ public class Libreria_classe extends Login_classe{
     static Scanner sc = new Scanner(System.in);
 
     public static void menu(){
-        int scelta = 0;
+        String scelta = "";
 
         System.out.print("\033c");
 
@@ -27,22 +25,22 @@ public class Libreria_classe extends Login_classe{
         System.out.println("2) Inserisci libro ad una libreria già esistente");
         System.out.println("3) Visualizza librerie");
         System.out.println("4) Esci dal menu");
-        scelta = sc.nextInt();
-
+        scelta = sc.nextLine();
+        
         switch(scelta){
-            case 1:{
+            case "1":{
                 registraLibreria();
                 break;
             }
-            case 2:{
+            case "2":{
                 inserisciLibro();
                 break;
             }
-            case 3:{
+            case "3":{
                 leggiLibreria();
                 break;
             }
-            case 4:{
+            case "4":{
                 break;
             }
         }
@@ -72,9 +70,10 @@ public class Libreria_classe extends Login_classe{
         try (FileWriter writer = new FileWriter(absol, true)) {
             System.out.println("Inserire il nome della nuova libreria: ");
             nome = sc.nextLine();
+
             do{
                 do{  
-                    System.out.print("\033c");
+                    //System.out.print("\033c");
                     System.out.println("Inserire il titolo da inserire nella libreria: " + nome);
                     titolo = sc.nextLine();
                     System.out.println("Inserire l'autore del libro: " + titolo);
@@ -104,6 +103,7 @@ public class Libreria_classe extends Login_classe{
     }
 
     public static void inserisciLibro(){
+        boolean stato=false;
         String nomeLib = "";
         System.out.println("Inserisci il nome della libreria a cui vuoi aggiungere il libro: ");
         nomeLib = sc.nextLine();
@@ -123,43 +123,47 @@ public class Libreria_classe extends Login_classe{
                     String authors = fields[3]; 
 
                     if(user.equals(Login_classe.userId) && nome.equals(nomeLib)){
-                        try (FileWriter writer = new FileWriter(absol, true)) {
-                            String titolo ="";
-                            String autore ="";
-                            boolean stato;
-                            do{  
-                                System.out.print("\033c");
-                                System.out.println("Inserire il titolo da inserire nella libreria: " + nome);
-                                titolo = sc.nextLine();
-                                System.out.println("Inserire l'autore del libro: " + titolo);
-                                autore = sc.nextLine();
-                
-                                stato = rc.ricercaAutoTito(titolo, autore);
-                            }while(stato != true);
-                                    
-                            // Scrittura dei dati nel file CSV
-                            writer.append(Login_classe.userId); //nome user
-                            writer.append(';');
-                            writer.append(nome); //nome libreria
-                            writer.append(';');
-                            writer.append(titolo); //titolo libro
-                            writer.append(';');
-                            writer.append(autore); //autore
-                            writer.append(';');
-                            writer.append('\n');            
-                        } catch (IOException e) {
-                            System.err.println("Errore durante la scrittura nel file: " + e.getMessage());
-                        }
+                        stato = true;
                         //sc.nextLine();
-                    }else{
-                        System.out.println("Non esiste libreria con il seguente nome: " + nome);
                     }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        sc.nextLine();
+
+        if(stato){
+            try (FileWriter writer = new FileWriter(absol, true)) {
+                String titolo ="";
+                String autore ="";
+                boolean stato1 = false;
+                
+                do{  
+                    //System.out.print("\033c");
+                    System.out.println("Inserire il titolo da inserire nella libreria: " + nomeLib);
+                    titolo = sc.nextLine();
+                    System.out.println("Inserire l'autore del libro: " + titolo);
+                    autore = sc.nextLine();
+
+                    stato1 = rc.ricercaAutoTito(titolo, autore);
+                }while(stato1 != true);
+                        
+                // Scrittura dei dati nel file CSV
+                writer.append(Login_classe.userId); //nome user
+                writer.append(';');
+                writer.append(nomeLib); //nome libreria
+                writer.append(';');
+                writer.append(titolo); //titolo libro
+                writer.append(';');
+                writer.append(autore); //autore
+                writer.append(';');
+                writer.append('\n');            
+            } catch (IOException e) {
+                System.err.println("Errore durante la scrittura nel file: " + e.getMessage());
+            }
+        }else{
+            System.out.println("Non e' stato possibie trovare la seguente libreria");
+        }
     }
 
     public static void leggiLibreria(){
@@ -214,7 +218,7 @@ public class Libreria_classe extends Login_classe{
 
         return fields.toArray(new String[0]);
     }
-    
+
     public static void stampa(String nome, String user, String title, String authors){
         System.out.println("Libreria: " + nome);
         System.out.println("Proprietario: " + user);

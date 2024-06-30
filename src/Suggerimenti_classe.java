@@ -99,7 +99,7 @@ public class Suggerimenti_classe extends Libreria_classe{
                     String title = fields[2]; 
                     String authors = fields[3];
                     
-                    if(user.equals(Libreria_classe.userId) && titolo.equals(title) && autore.contains(authors)) {
+                    if(user.equals(Login_classe.userId) && titolo.equals(title) && autore.contains(authors)) {
                         stato = true;
                     }
                 }
