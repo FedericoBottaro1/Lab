@@ -63,11 +63,10 @@ public class Login_classe extends Registrazione_classe{
         
             System.out.println("1) Eseguire una ricerca di un libro specifico");
             System.out.println("2) Visualizzare la valutazioni fornite dagli altri utenti registrati");
-            System.out.println("3) Crea una libreria personale");
-            System.out.println("4) Visualizza librerie personali");
-            System.out.println("5) Inserisci valutazione libro");
-            System.out.println("6) Inserisci un suggerimento");
-            System.out.println("7) log-out");
+            System.out.println("3) Interagisci con librerie");
+            System.out.println("4) Inserisci valutazione libro");
+            System.out.println("5) Inserisci un suggerimento");
+            System.out.println("6) log-out");
             scelta = sc.nextInt();
 
             switch (scelta) {
@@ -83,26 +82,22 @@ public class Login_classe extends Registrazione_classe{
                 }
                 case 3:{
                     Libreria_classe lc = new Libreria_classe();
-                    lc.registraLibreria();
+                    lc.menu();
                     break;
                 }
+                
                 case 4:{
-                    Libreria_classe lc = new Libreria_classe();
-                    lc.leggiLibreria();
-                    break;
-                }
-                case 5:{
                     Valutazioni_classe vc = new Valutazioni_classe();
                     vc.inserimento();
                     break;
                 }
-                case 6:{
+                case 5:{
                     Suggerimenti_classe sc = new Suggerimenti_classe();
                     sc.inserisciSuggerimentoLibro();
                     break;
                 }
                 //?
-                case 7:{
+                case 6:{
                     loggedIn= false;
                     System.out.println("Log-out effettuato con successo.");
                     break;
@@ -113,6 +108,6 @@ public class Login_classe extends Registrazione_classe{
                 }
             }
 
-        }while (scelta != 7);
+        }while (scelta != 6);
     }
 }

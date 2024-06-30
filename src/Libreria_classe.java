@@ -17,6 +17,38 @@ public class Libreria_classe extends Login_classe{
     
     static Scanner sc = new Scanner(System.in);
 
+    public static void menu(){
+        int scelta = 0;
+
+        System.out.print("\033c");
+
+        System.out.println("Scegli cosa desideri fare");
+        System.out.println("1) Crea una nuova libreria");
+        System.out.println("2) Inserisci libro ad una libreria già esistente");
+        System.out.println("3) Visualizza librerie");
+        System.out.println("4) Esci dal menu");
+        scelta = sc.nextInt();
+
+        switch(scelta){
+            case 1:{
+                registraLibreria();
+                break;
+            }
+            case 2:{
+                inserisciLibro();
+                break;
+            }
+            case 3:{
+                leggiLibreria();
+                break;
+            }
+            case 4:{
+                break;
+            }
+        }
+
+    }
+
     public static void registraLibreria(){
         File csvFile = new File(absol);
 
@@ -69,6 +101,65 @@ public class Libreria_classe extends Login_classe{
         } catch (IOException e) {
             System.err.println("Errore durante la scrittura nel file: " + e.getMessage());
         }
+    }
+
+    public static void inserisciLibro(){
+        String nomeLib = "";
+        System.out.println("Inserisci il nome della libreria a cui vuoi aggiungere il libro: ");
+        nomeLib = sc.nextLine();
+        
+        System.out.print("\033c");
+        try (BufferedReader br = new BufferedReader(new FileReader(absol))) {
+            String line;
+            
+            while ((line = br.readLine()) != null) {
+                String[] fields = parseLine(line);
+                
+                if(fields.length == 5) {
+                    // Esempio di accesso ai dati
+                    String user = fields[0];
+                    String nome = fields[1];
+                    String title = fields[2];
+                    String authors = fields[3]; 
+
+                    if(user.equals(Login_classe.userId) && nome.equals(nomeLib)){
+                        try (FileWriter writer = new FileWriter(absol, true)) {
+                            String titolo ="";
+                            String autore ="";
+                            boolean stato;
+                            do{  
+                                System.out.print("\033c");
+                                System.out.println("Inserire il titolo da inserire nella libreria: " + nome);
+                                titolo = sc.nextLine();
+                                System.out.println("Inserire l'autore del libro: " + titolo);
+                                autore = sc.nextLine();
+                
+                                stato = rc.ricercaAutoTito(titolo, autore);
+                            }while(stato != true);
+                                    
+                            // Scrittura dei dati nel file CSV
+                            writer.append(Login_classe.userId); //nome user
+                            writer.append(';');
+                            writer.append(nome); //nome libreria
+                            writer.append(';');
+                            writer.append(titolo); //titolo libro
+                            writer.append(';');
+                            writer.append(autore); //autore
+                            writer.append(';');
+                            writer.append('\n');            
+                        } catch (IOException e) {
+                            System.err.println("Errore durante la scrittura nel file: " + e.getMessage());
+                        }
+                        //sc.nextLine();
+                    }else{
+                        System.out.println("Non esiste libreria con il seguente nome: " + nome);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        sc.nextLine();
     }
 
     public static void leggiLibreria(){

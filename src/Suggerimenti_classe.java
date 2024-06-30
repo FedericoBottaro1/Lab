@@ -44,56 +44,45 @@ public class Suggerimenti_classe extends Libreria_classe{
         
         System.out.println("Autore: ");
         String autore = sc.nextLine();
-        //dopo che vengono inseriti i dati il programma si chiude e torna al login home
         
         boolean stato = ricercaLib(titolo, autore);
-        
 
-        if(stato == true){
+        int limite = limiteConsigli(titolo, autore);
+
+        if(stato == true && limite < 3){
             try (FileWriter writer = new FileWriter(absol, true)) {
-                do{
-                    do{  
-                        System.out.print("\033c");
+                do{  
+                    System.out.print("\033c");
+                    
+                    System.out.println("Inserire il suggerimento: ");
+                    System.out.println("Titolo: ");
+                    titoloSugg = sc.nextLine();
                         
-                        System.out.println("Inserire il suggerimento: ");
-                        System.out.println("Titolo: ");
-                        titoloSugg = sc.nextLine();
-                        
-                        System.out.println("Autore: ");
-                        autoreSugg = sc.nextLine();
+                    System.out.println("Autore: ");
+                    autoreSugg = sc.nextLine();
     
-                        stato = RicercaLibro_classe.ricercaAutoTito(titolo, autore);
-                    }while(stato != true);
-
-                    //System.out.println("-----" +limiteConsigli(titolo, autore));
-                    if(limiteConsigli(titolo, autore) >= 3){
-                        System.out.println("Hai raggiunto il massimo di consigli");
-                        break;
-                   }
-                   //se metto 4 di fila gli scrive tutti
+                    stato = RicercaLibro_classe.ricercaAutoTito(titolo, autore);
+                }while(stato != true);
                     
-                    // Scrittura dei dati nel file CSV
-                    writer.append(Login_classe.userId); //nome user
-                    writer.append(';');
-                    writer.append(titolo); 
-                    writer.append(';');
-                    writer.append(autore); 
-                    writer.append(';');
-                    writer.append(titoloSugg); 
-                    writer.append(';');
-                    writer.append(autoreSugg);
-                    writer.append(';');
-                    writer.append('\n');
-                    System.out.println("Vuoi inserire un altro libro? (y / n) ");
-                    scelta = sc.nextLine();
-                    
-                }while(!scelta.equals("n"));
-
+                // Scrittura dei dati nel file CSV
+                writer.append(Login_classe.userId); //nome user
+                writer.append(';');
+                writer.append(titolo); 
+                writer.append(';');
+                writer.append(autore); 
+                writer.append(';');
+                writer.append(titoloSugg); 
+                writer.append(';');
+                writer.append(autoreSugg);
+                writer.append(';');
+                writer.append('\n');
             }catch (IOException e) {
                 System.err.println("Errore durante la scrittura nel file: " + e.getMessage());
             }
+        }else if(limite == 3){
+            System.out.println("E' stato raggiunto il numero massimo di suggerimenti.");
         }else{
-            System.out.println("Il libro non e' presente in nessuna libreria.");
+            System.out.println("Il libro non e' presente in nessuna libreria");
         }
         sc.nextLine();
     }
@@ -125,7 +114,6 @@ public class Suggerimenti_classe extends Libreria_classe{
     public static int limiteConsigli(String titolo, String autore){
         int count = 0;
         String line;
-
         try (BufferedReader br = new BufferedReader(new FileReader(absol))) {
             while ((line = br.readLine()) != null) {
                 String[] fields = parseLine(line);
@@ -148,7 +136,6 @@ public class Suggerimenti_classe extends Libreria_classe{
 
         return count;
     }
-
 
     private static String[] parseLine(String line) {
         boolean inQuotes = false;
